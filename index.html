@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ShopMart - Your Daily Deals</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/home.css">
+</head>
+<body>
+	<!-- Header Section -->
+	<header id="header">
+		
+		<div class="brand">
+			<h2>ShopMart</h2>
+			<p>Your Daily Deals</p>
+		</div>
+
+		<!-- Search Bar -->
+		<div class="search-bar">
+			<input type="text" id="searchInput" placeholder="Search for products..." autocomplete="off">
+			<button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+			<div id="searchResults" class="search-results"></div>
+		</div>
+
+		<div class="header-right">
+			<ul id="navbar">
+				<li><a href="index.html" class="active">Home</a></li>
+				<li><a href="pages/products.html">Shop</a></li>
+				<li><a href="pages/events.html">Events</a></li>
+				<li><a href="pages/faq.html">FAQ</a></li>
+			</ul>
+
+			<div class="header-icons">
+				<button onclick="openModal('wishlistModal')" title="Wishlist">
+					<i class="fas fa-heart"></i>
+					<span class="badge" id="wishlistBadge">0</span>
+				</button>
+				<button onclick="openModal('cartModal')" title="Shopping Cart">
+					<i class="fas fa-shopping-bag"></i>
+					<span class="badge" id="cartBadge">0</span>
+				</button>
+				<a href="pages/wishlist.html" title="Wishlist">
+					<i class="fas fa-heart"></i>
+					<span class="badge" id="wishlistBadge">0</span>
+				</a>
+				<a href="pages/cart.html" title="Shopping Cart">
+					<i class="fas fa-shopping-bag"></i>
+					<span class="badge" id="cartBadge">0</span>
+				</a>
+				<div class="user-menu">
+					<button onclick="toggleUserMenu()" title="Account">
+						<i class="fas fa-user-circle"></i>
+					</button>
+				</div>
+					<div class="user-dropdown" id="userDropdown">
+						<a href="pages/user-profile.html"><i class="fas fa-user"></i> Profile</a>
+						<a href="pages/orders.html"><i class="fas fa-box"></i> Orders</a>
+						<a href="pages/messages.html"><i class="fas fa-envelope"></i> Messages</a>
+						<hr>
+						<a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Hero Banner Section -->
+	<section id="hero">
+		<div class="hero-content">
+			<h1>EXPLORE OUR</h1>
+			<h1>PRODUCTS</h1>
+			<button class="btn" onclick="window.location.href='pages/products.html'">SHOP ALL</button>
+		</div>
+		<div class="hero-image">
+			<img src="img/hero.png" alt="Products banner" style="max-width: 100%;">
+		</div>
+	</section>
+
+	<!-- Best Selling Products Section -->
+	<section class="section-p1">
+		<div class="section-header">
+			<h2>Best Selling Products</h2>
+			<p>Sorted by popularity and customer reviews</p>
+		</div>
+
+		<div class="filter-buttons">
+			<button class="filter-btn active" onclick="filterProducts('all')">All</button>
+			<button class="filter-btn" onclick="filterProducts('Electronics')">Electronics</button>
+			<button class="filter-btn" onclick="filterProducts('Clothes')">Clothes</button>
+			<button class="filter-btn" onclick="filterProducts('Shoes')">Shoes</button>
+			<button class="filter-btn" onclick="filterProducts('Cosmetics')">Cosmetics</button>
+			<button class="filter-btn" onclick="filterProducts('Home Goods')">Home Goods</button>
+		</div>
+
+		<div class="products-grid" id="productsGrid">
+			<!-- Products will be loaded here by JavaScript -->
+		</div>
+	</section>
+
+	<!-- Events Section -->
+	<section id="events" class="section-p1" style="background-color: #e8f5f1;">
+		<h2>Popular Events</h2>
+		<div class="events-container">
+			<div class="event-card">
+				<div class="event-image" style="background: linear-gradient(135deg, #088178, #066c5e);">
+					<span class="event-badge">LIVE NOW</span>
+				</div>
+				<h4>Summer Sale 2024</h4>
+				<p>Get up to 50% off on selected items</p>
+				<div class="event-timer">
+					<span><strong>05</strong> Days</span>
+					<span><strong>12</strong> Hours</span>
+					<span><strong>34</strong> Minutes</span>
+				</div>
+				<button class="btn" style="width: 100%; margin-top: 10px;">View Event</button>
+			</div>
+
+			<div class="event-card">
+				<div class="event-image" style="background: linear-gradient(135deg, #ff8c42, #ff7620);">
+					<span class="event-badge">UPCOMING</span>
+				</div>
+				<h4>Flash Deals</h4>
+				<p>Limited time offers on premium products</p>
+				<div class="event-timer">
+					<span><strong>02</strong> Days</span>
+					<span><strong>08</strong> Hours</span>
+					<span><strong>15</strong> Minutes</span>
+				</div>
+				<button class="btn btn-secondary" style="width: 100%; margin-top: 10px;">Notify Me</button>
+			</div>
+
+			<div class="event-card">
+				<div class="event-image" style="background: linear-gradient(135deg, #27ae60, #229954);">
+					<span class="event-badge">ENDS SOON</span>
+				</div>
+				<h4>Clearance Sale</h4>
+				<p>Make room for new inventory - huge discounts</p>
+				<div class="event-timer">
+					<span><strong>01</strong> Days</span>
+					<span><strong>03</strong> Hours</span>
+					<span><strong>45</strong> Minutes</span>
+				</div>
+				<button class="btn btn-success" style="width: 100%; margin-top: 10px;">Shop Now</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- FAQ Section -->
+	<section id="faq" class="section-p1">
+		<h2>Frequently Asked Questions</h2>
+		<div class="faq-container">
+			<div class="faq-item">
+				<div class="faq-question" onclick="toggleFAQ(this)">
+					<h5>How do I place an order?</h5>
+					<i class="fas fa-chevron-down"></i>
+				</div>
+				<div class="faq-answer">
+					<p>Browse our products, add items to your cart, proceed to checkout, and follow the payment process. You'll receive an order confirmation email.</p>
+				</div>
+			</div>
+
+			<div class="faq-item">
+				<div class="faq-question" onclick="toggleFAQ(this)">
+					<h5>What are your shipping options?</h5>
+					<i class="fas fa-chevron-down"></i>
+				</div>
+				<div class="faq-answer">
+					<p>We offer standard (5-7 business days), express (2-3 days), and overnight shipping options. Shipping costs vary by location and method.</p>
+				</div>
+			</div>
+
+			<div class="faq-item">
+				<div class="faq-question" onclick="toggleFAQ(this)">
+					<h5>What is your return policy?</h5>
+					<i class="fas fa-chevron-down"></i>
+				</div>
+				<div class="faq-answer">
+					<p>We accept returns within 30 days of purchase for unused items in original packaging. Refunds are processed within 5-7 business days.</p>
+				</div>
+			</div>
+
+			<div class="faq-item">
+				<div class="faq-question" onclick="toggleFAQ(this)">
+					<h5>Do you offer payment plans?</h5>
+					<i class="fas fa-chevron-down"></i>
+				</div>
+				<div class="faq-answer">
+					<p>Yes! We accept PayPal, Stripe, and Cash on Delivery. For large purchases, financing options may be available.</p>
+				</div>
+			</div>
+
+			<div class="faq-item">
+				<div class="faq-question" onclick="toggleFAQ(this)">
+					<h5>Can I cancel my order?</h5>
+					<i class="fas fa-chevron-down"></i>
+				</div>
+				<div class="faq-answer">
+					<p>Orders can be cancelled within 24 hours of placement. After that, contact our support team to discuss options.</p>
+				</div>
+			</div>
+
+			<div class="faq-item">
+				<div class="faq-question" onclick="toggleFAQ(this)">
+					<h5>How do I become a seller?</h5>
+					<i class="fas fa-chevron-down"></i>
+				</div>
+				<div class="faq-answer">
+					<p>Visit our seller signup page and complete the registration process. You'll need to provide shop details, banking information, and a valid ID.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Modals -->
+	<div id="cartModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>Shopping Cart</h2>
+				<button class="close-btn" onclick="closeModal('cartModal')">&times;</button>
+			</div>
+			<div id="cartItems" class="modal-body">
+				<!-- Cart items will be loaded here -->
+			</div>
+			<div style="margin-top: 20px;">
+				<h4>Subtotal: <span id="subtotal">$0.00</span></h4>
+				<button class="btn btn-block" onclick="window.location.href='pages/checkout.html'">Proceed to Checkout</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="wishlistModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>My Wishlist</h2>
+				<button class="close-btn" onclick="closeModal('wishlistModal')">&times;</button>
+			</div>
+			<div id="wishlistItems" class="modal-body">
+				<!-- Wishlist items will be loaded here -->
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer id="footer">
+		<div class="footer-grid">
+			<div class="footer-col">
+				<h5>About ShopMart</h5>
+				<p>Your trusted online marketplace for quality products at competitive prices.</p>
+				<div class="social-icons">
+					<a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+					<a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+					<a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+					<a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+				</div>
+			</div>
+
+			<div class="footer-col">
+				<h5>Quick Links</h5>
+				<ul>
+					<li><a href="#">Home</a></li>
+					<li><a href="#">Shop</a></li>
+					<li><a href="#">Events</a></li>
+					<li><a href="#">Blog</a></li>
+					<li><a href="#">Contact</a></li>
+				</ul>
+			</div>
+
+			<div class="footer-col">
+				<h5>Customer Support</h5>
+				<ul>
+					<li><a href="#">FAQ</a></li>
+					<li><a href="#">Returns</a></li>
+					<li><a href="#">Shipping Info</a></li>
+					<li><a href="#">Track Order</a></li>
+					<li><a href="#">Contact Us</a></li>
+				</ul>
+			</div>
+
+			<div class="footer-col">
+				<h5>Legal</h5>
+				<ul>
+					<li><a href="#">Terms & Conditions</a></li>
+					<li><a href="#">Privacy Policy</a></li>
+					<li><a href="#">Cookie Policy</a></li>
+					<li><a href="#">Disclaimer</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="footer-bottom">
+			<p>&copy; 2024 ShopMart. All rights reserved. | Secure Shopping Guaranteed</p>
+		</div>
+	</footer>
+
+	<script src="js/main.js"></script>
+	<script src="js/home.js"></script>
+</body>
+</html>
