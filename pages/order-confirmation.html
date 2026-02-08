@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Order Confirmation - Emporium</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="stylesheet" href="../css/main.css">
+	<style>
+		.confirmation-container {
+			max-width: 800px;
+			margin: 40px auto;
+			padding: 0 20px;
+		}
+
+		.confirmation-box {
+			background: white;
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			padding: 40px;
+			text-align: center;
+		}
+
+		.confirmation-icon {
+			width: 80px;
+			height: 80px;
+			background-color: var(--success-color);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0 auto 30px;
+			animation: scaleIn 0.5s ease-out;
+		}
+
+		.confirmation-icon i {
+			font-size: 40px;
+			color: white;
+		}
+
+		@keyframes scaleIn {
+			from {
+				transform: scale(0);
+			}
+
+			to {
+				transform: scale(1);
+			}
+		}
+
+		.confirmation-title {
+			font-size: 28px;
+			font-weight: 700;
+			color: var(--dark-color);
+			margin-bottom: 10px;
+		}
+
+		.confirmation-message {
+			font-size: 14px;
+			color: var(--text-color);
+			margin-bottom: 30px;
+		}
+
+		.order-details {
+			background-color: var(--light-color);
+			padding: 20px;
+			border-radius: 8px;
+			margin-bottom: 30px;
+			text-align: left;
+		}
+
+		.order-detail-row {
+			display: flex;
+			justify-content: space-between;
+			padding: 10px 0;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.order-detail-row:last-child {
+			border-bottom: none;
+		}
+
+		.order-detail-label {
+			color: var(--text-color);
+			font-weight: 600;
+		}
+
+		.order-detail-value {
+			color: var(--dark-color);
+			font-weight: 700;
+		}
+
+		.order-items {
+			background-color: var(--light-color);
+			padding: 20px;
+			border-radius: 8px;
+			margin-bottom: 30px;
+			text-align: left;
+		}
+
+		.order-items h4 {
+			margin: 0 0 15px 0;
+			color: var(--dark-color);
+		}
+
+		.item-row {
+			display: flex;
+			justify-content: space-between;
+			padding: 10px 0;
+			border-bottom: 1px solid var(--border-color);
+			font-size: 13px;
+		}
+
+		.item-row:last-child {
+			border-bottom: none;
+		}
+
+		.item-details {
+			flex: 1;
+		}
+
+		.item-price {
+			text-align: right;
+			font-weight: 700;
+			color: var(--primary-color);
+		}
+
+		.next-steps {
+			background-color: rgba(8, 129, 120, 0.1);
+			border-left: 4px solid var(--primary-color);
+			padding: 20px;
+			border-radius: 4px;
+			margin-bottom: 30px;
+			text-align: left;
+		}
+
+		.next-steps h5 {
+			margin: 0 0 12px 0;
+			color: var(--dark-color);
+		}
+
+		.next-steps ol {
+			margin: 0;
+			padding-left: 20px;
+			color: var(--text-color);
+			font-size: 13px;
+		}
+
+		.next-steps li {
+			margin-bottom: 8px;
+		}
+
+		.action-buttons {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 15px;
+			margin-top: 30px;
+		}
+
+		.action-buttons a {
+			padding: 12px;
+			text-align: center;
+			border-radius: 4px;
+			text-decoration: none;
+			font-weight: 600;
+			transition: 0.3s ease;
+		}
+
+		.action-buttons .btn-primary {
+			background-color: var(--primary-color);
+			color: white;
+		}
+
+		.action-buttons .btn-primary:hover {
+			background-color: #067066;
+		}
+
+		.action-buttons .btn-secondary {
+			background-color: var(--light-color);
+			color: var(--dark-color);
+			border: 1px solid var(--border-color);
+		}
+
+		.action-buttons .btn-secondary:hover {
+			background-color: #e8e8e8;
+		}
+
+		@media (max-width: 768px) {
+			.confirmation-box {
+				padding: 25px;
+			}
+
+			.action-buttons {
+				grid-template-columns: 1fr;
+			}
+
+			.order-detail-row,
+			.item-row {
+				flex-direction: column;
+				gap: 5px;
+			}
+
+			.item-price {
+				text-align: left;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Header -->
+	<header id="header">
+		<a href="../index.html"><img src="../img/logo.png" class="logo" alt="logo"></a>
+		<div class="brand">
+			<h2>Emporium</h2>
+		</div>
+		<h1>Order Confirmation</h1>
+		<div class="header-icons">
+			<a href="cart.html"><i class="far fa-shopping-bag"></i></a>
+			<a href="wishlist.html"><i class="far fa-heart"></i></a>
+		</div>
+	</header>
+
+	<main>
+		<div class="confirmation-container">
+			<div class="confirmation-box">
+				<div class="confirmation-icon">
+					<i class="fas fa-check"></i>
+				</div>
+
+				<h2 class="confirmation-title">Order Confirmed!</h2>
+				<p class="confirmation-message">
+					Thank you for your purchase! Your order has been successfully placed and will be processed soon.
+				</p>
+
+				<div class="order-details">
+					<div class="order-detail-row">
+						<span class="order-detail-label">Order ID:</span>
+						<span class="order-detail-value" id="orderId">#ORD20240125001</span>
+					</div>
+					<div class="order-detail-row">
+						<span class="order-detail-label">Order Date:</span>
+						<span class="order-detail-value" id="orderDate">January 25, 2024</span>
+					</div>
+					<div class="order-detail-row">
+						<span class="order-detail-label">Total Amount:</span>
+						<span class="order-detail-value" id="totalAmount">₹450.50</span>
+					</div>
+					<div class="order-detail-row">
+						<span class="order-detail-label">Payment Method:</span>
+						<span class="order-detail-value" id="paymentMethod">PayPal</span>
+					</div>
+					<div class="order-detail-row">
+						<span class="order-detail-label">Shipping Status:</span>
+						<span class="order-detail-value"><span
+								style="background-color: #cfe2ff; color: #084298; padding: 4px 8px; border-radius: 4px;">Processing</span></span>
+					</div>
+				</div>
+
+				<div class="order-items">
+					<h4>Order Items</h4>
+					<div id="orderItemsList"></div>
+				</div>
+
+				<div class="next-steps">
+					<h5><i class="fas fa-info-circle" style="margin-right: 8px;"></i>What's Next?</h5>
+					<ol>
+						<li><strong>Confirmation Email:</strong> Check your email for an order confirmation with all
+							details</li>
+						<li><strong>Order Processing:</strong> Your order will be prepared and shipped within 1-2
+							business days</li>
+						<li><strong>Tracking Information:</strong> You'll receive tracking details via email once
+							shipped</li>
+						<li><strong>Expected Delivery:</strong> Items typically arrive within 3-7 business days</li>
+						<li><strong>Track Your Order:</strong> Visit your profile page to monitor order status in
+							real-time</li>
+					</ol>
+				</div>
+
+				<div class="action-buttons">
+					<a href="../index.html" class="btn-primary">Continue Shopping</a>
+					<a href="user-profile.html" class="btn-secondary">View My Orders</a>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<footer id="footer"></footer>
+
+	<script src="../js/main.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const params = new URLSearchParams(window.location.search);
+			const orderId = params.get('orderid');
+
+			if (!orderId) {
+				window.location.href = '../index.html';
+				return;
+			}
+
+			const user = storageManager.getUser();
+			if (!user || !user.orders) {
+				return;
+			}
+
+			const order = user.orders.find(o => o.id === orderId);
+			if (!order) {
+				return;
+			}
+
+			// Display order details
+			document.getElementById('orderId').textContent = order.id;
+			document.getElementById('orderDate').textContent = order.date;
+			document.getElementById('totalAmount').textContent = order.total;
+			document.getElementById('paymentMethod').textContent = order.paymentMethod === 'paypal' ? 'PayPal' :
+				order.paymentMethod === 'stripe' ? 'Stripe' :
+					'Cash on Delivery';
+
+			// Display order items
+			let itemsHtml = '';
+			order.items.forEach(item => {
+				const product = window.mockProducts.find(p => p.id === item.productId);
+				if (product) {
+					const price = product.discountPrice || product.price;
+					const itemTotal = price * item.quantity;
+					itemsHtml += `
+						<div class="item-row">
+							<div class="item-details">
+								<strong>${product.name}</strong> × ${item.quantity}
+							</div>
+							<div class="item-price">₹${itemTotal.toFixed(2)}</div>
+						</div>
+					`;
+				}
+			});
+			document.getElementById('orderItemsList').innerHTML = itemsHtml;
+		});
+	</script>
+</body>
+
+</html>

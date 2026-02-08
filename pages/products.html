@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Shop - Emporium</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="stylesheet" href="../css/main.css">
+	<style>
+		.products-page {
+			display: grid;
+			grid-template-columns: 250px 1fr;
+			gap: 30px;
+			max-width: 1400px;
+			margin: 40px auto;
+			padding: 0 20px;
+		}
+
+		.sidebar-filter {
+			background: white;
+			padding: 25px;
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			height: fit-content;
+			position: sticky;
+			top: 100px;
+		}
+
+		.filter-section {
+			margin-bottom: 25px;
+			padding-bottom: 25px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.filter-section:last-child {
+			margin-bottom: 0;
+			padding-bottom: 0;
+			border-bottom: none;
+		}
+
+		.filter-section h4 {
+			margin: 0 0 15px 0;
+			color: var(--dark-color);
+			font-size: 14px;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+
+		.filter-option {
+			display: flex;
+			align-items: center;
+			margin-bottom: 10px;
+			cursor: pointer;
+		}
+
+		.filter-option input {
+			cursor: pointer;
+		}
+
+		.filter-option label {
+			margin: 0 0 0 8px;
+			cursor: pointer;
+			font-size: 13px;
+		}
+
+		.price-range {
+			margin-top: 15px;
+		}
+
+		.price-range input[type="range"] {
+			width: 100%;
+			margin-bottom: 10px;
+		}
+
+		.price-display {
+			font-size: 13px;
+			color: var(--primary-color);
+			font-weight: 700;
+		}
+
+		.products-content {
+			background: white;
+			padding: 25px;
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		.sort-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 25px;
+			padding-bottom: 15px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.sort-select {
+			padding: 8px 12px;
+			border: 1px solid var(--border-color);
+			border-radius: 4px;
+			font-size: 13px;
+			cursor: pointer;
+		}
+
+		.products-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+			gap: 20px;
+		}
+
+		.product-card {
+			background: white;
+			border-radius: 8px;
+			overflow: hidden;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			transition: all 0.3s ease;
+		}
+
+		.product-card:hover {
+			box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+			transform: translateY(-5px);
+		}
+
+		.product-image {
+			width: 100%;
+			height: 180px;
+			object-fit: cover;
+		}
+
+		.product-info {
+			padding: 15px;
+		}
+
+		.product-name {
+			font-size: 13px;
+			font-weight: 600;
+			margin: 0 0 8px 0;
+			color: var(--dark-color);
+			min-height: 26px;
+		}
+
+		.product-seller {
+			font-size: 11px;
+			color: var(--text-color);
+			margin: 0 0 8px 0;
+		}
+
+		.product-price {
+			font-size: 15px;
+			font-weight: 700;
+			color: var(--primary-color);
+			margin-bottom: 8px;
+		}
+
+		.product-rating {
+			font-size: 12px;
+			margin-bottom: 10px;
+		}
+
+		.product-actions {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 8px;
+		}
+
+		.btn-small {
+			padding: 6px 10px;
+			font-size: 11px;
+		}
+
+		.empty-state {
+			text-align: center;
+			padding: 60px 20px;
+			color: var(--text-color);
+		}
+
+		.empty-state i {
+			font-size: 60px;
+			color: var(--border-color);
+			margin-bottom: 20px;
+		}
+
+		@media (max-width: 768px) {
+			.products-page {
+				grid-template-columns: 1fr;
+			}
+
+			.sidebar-filter {
+				position: relative;
+				top: auto;
+			}
+
+			.products-grid {
+				grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+				gap: 15px;
+			}
+
+			.sort-bar {
+				flex-direction: column;
+				gap: 12px;
+				align-items: flex-start;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Header -->
+	<header id="header">
+		<a href="../index.html"><img src="../img/logo.png" class="logo" alt="logo"></a>
+		<div class="brand">
+			<h2>Emporium</h2>
+		</div>
+		<h1>Shop</h1>
+		<a href="cart.html"><i class="far fa-shopping-bag"></i><span class="badge" id="cartBadge">0</span></a>
+		<a href="wishlist.html"><i class="far fa-heart"></i><span class="badge" id="wishlistBadge">0</span></a>
+		<div class="user-menu">
+			<button onclick="toggleUserMenu()" title="Account">
+				<i class="fas fa-user-circle"></i>
+			</button>
+			<div class="user-dropdown" id="userDropdown">
+				<a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
+				<a href="orders.html"><i class="fas fa-box"></i> Orders</a>
+				<a href="messages.html"><i class="fas fa-envelope"></i> Messages</a>
+				<div id="sellerLinkContainer"></div>
+				<hr>
+				<a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+			</div>
+		</div>
+		</div>
+	</header>
+
+	<main>
+		<div class="products-page">
+			<!-- Sidebar Filters -->
+			<aside class="sidebar-filter">
+				<h3 style="margin-top: 0;">Filters</h3>
+
+				<!-- Category Filter -->
+				<div class="filter-section">
+					<h4>Category</h4>
+					<div class="filter-option">
+						<input type="checkbox" id="cat-all" checked onchange="applyFilters()">
+						<label for="cat-all">All Categories</label>
+					</div>
+					<div class="filter-option">
+						<input type="checkbox" id="cat-clothes" onchange="applyFilters()">
+						<label for="cat-clothes">Clothes</label>
+					</div>
+					<div class="filter-option">
+						<input type="checkbox" id="cat-shoes" onchange="applyFilters()">
+						<label for="cat-shoes">Shoes</label>
+					</div>
+					<div class="filter-option">
+						<input type="checkbox" id="cat-electronics" onchange="applyFilters()">
+						<label for="cat-electronics">Electronics</label>
+					</div>
+					<div class="filter-option">
+						<input type="checkbox" id="cat-cosmetics" onchange="applyFilters()">
+						<label for="cat-cosmetics">Cosmetics</label>
+					</div>
+				</div>
+
+				<!-- Price Filter -->
+				<div class="filter-section">
+					<h4>Price Range</h4>
+					<div class="price-range">
+						<input type="range" id="priceRange" min="0" max="500" value="500" onchange="applyFilters()">
+						<div class="price-display">Max: $<span id="priceValue">500</span></div>
+					</div>
+				</div>
+
+				<!-- Rating Filter -->
+				<div class="filter-section">
+					<h4>Rating</h4>
+					<div class="filter-option">
+						<input type="checkbox" id="rating-4plus" onchange="applyFilters()">
+						<label for="rating-4plus">⭐ 4+ Stars</label>
+					</div>
+					<div class="filter-option">
+						<input type="checkbox" id="rating-3plus" onchange="applyFilters()">
+						<label for="rating-3plus">⭐ 3+ Stars</label>
+					</div>
+				</div>
+
+				<!-- Availability -->
+				<div class="filter-section">
+					<h4>Availability</h4>
+					<div class="filter-option">
+						<input type="checkbox" id="inStock" onchange="applyFilters()">
+						<label for="inStock">In Stock Only</label>
+					</div>
+				</div>
+
+				<button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="resetFilters()">
+					Reset Filters
+				</button>
+			</aside>
+
+			<!-- Main Products Area -->
+			<div class="products-content">
+				<div class="sort-bar">
+					<h3 style="margin: 0;">Products</h3>
+					<select class="sort-select" id="sortSelect" onchange="applyFilters()">
+						<option value="featured">Featured</option>
+						<option value="price-low">Price: Low to High</option>
+						<option value="price-high">Price: High to Low</option>
+						<option value="newest">Newest</option>
+						<option value="best-selling">Best Selling</option>
+					</select>
+				</div>
+
+				<div class="products-grid" id="productsGrid"></div>
+			</div>
+		</div>
+	</main>
+
+	<footer id="footer"></footer>
+
+	<script src="../js/main.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			loadProducts();
+		});
+
+		document.getElementById('priceRange').addEventListener('input', function () {
+			document.getElementById('priceValue').textContent = this.value;
+		});
+
+		function loadProducts() {
+			let products = getAllProducts();
+			displayProducts(products);
+		}
+
+		function displayProducts(products) {
+			const grid = document.getElementById('productsGrid');
+
+			if (products.length === 0) {
+				grid.innerHTML = `
+					<div style="grid-column: 1/-1;" class="empty-state">
+						<i class="fas fa-search"></i>
+						<h3>No products found</h3>
+						<p>Try adjusting your filters or search terms</p>
+					</div>
+				`;
+				return;
+			}
+
+			let html = '';
+			products.forEach(product => {
+				const isOnSale = product.discountPrice && product.discountPrice < product.price;
+				const hasStock = product.stock > 0;
+
+				html += `
+					<div class="product-card">
+						<div style="position: relative; cursor: pointer;" onclick="window.location.href='product-detail.html?id=${product.id}'">
+							<img src="${product.image}" alt="${product.name}" class="product-image">
+							${isOnSale ? `<span style="position: absolute; top: 10px; right: 10px; background: var(--danger-color); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;">SALE</span>` : ''}
+							${!hasStock ? `<span style="position: absolute; bottom: 10px; left: 10px; background: var(--text-color); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;">Out of Stock</span>` : ''}
+						</div>
+						<div class="product-info">
+							<h4 class="product-name" style="cursor: pointer;" onclick="window.location.href='product-detail.html?id=${product.id}'">${product.name}</h4>
+							<p class="product-seller">${product.seller || 'Verified Seller'}</p>
+							<div class="product-price">
+								₹${(product.discountPrice || product.price).toFixed(2)}
+								${product.discountPrice ? `<span style="text-decoration: line-through; color: var(--text-color); font-size: 12px; font-weight: 400; margin-left: 8px;">₹${product.price.toFixed(2)}</span>` : ''}
+							</div>
+							<div class="product-rating">
+								⭐ ${product.rating}/5 (${product.reviews})
+							</div>
+							<div class="product-actions">
+								<button class="btn btn-primary btn-small" ${!hasStock ? 'disabled' : ''} onclick="addToCart(${product.id})">
+									<i class="fas fa-shopping-bag"></i> Add
+								</button>
+								<button class="btn btn-secondary btn-small" onclick="toggleWishlist(${product.id})">
+									<i class="fas fa-heart"></i> Save
+								</button>
+							</div>
+						</div>
+					</div>
+				`;
+			});
+
+			grid.innerHTML = html;
+		}
+
+		function applyFilters() {
+			let products = getAllProducts();
+			const maxPrice = parseInt(document.getElementById('priceRange').value);
+			const inStockOnly = document.getElementById('inStock').checked;
+			const rating4plus = document.getElementById('rating-4plus').checked;
+			const rating3plus = document.getElementById('rating-3plus').checked;
+			const sortBy = document.getElementById('sortSelect').value;
+
+			// Filter by price
+			products = products.filter(p => (p.discountPrice || p.price) <= maxPrice);
+
+			// Filter by stock
+			if (inStockOnly) {
+				products = products.filter(p => p.stock > 0);
+			}
+
+			// Filter by rating
+			if (rating4plus) {
+				products = products.filter(p => p.rating >= 4);
+			} else if (rating3plus) {
+				products = products.filter(p => p.rating >= 3);
+			}
+
+			// Sort
+			switch (sortBy) {
+				case 'price-low':
+					products.sort((a, b) => (a.discountPrice || a.price) - (b.discountPrice || b.price));
+					break;
+				case 'price-high':
+					products.sort((a, b) => (b.discountPrice || b.price) - (a.discountPrice || a.price));
+					break;
+				case 'best-selling':
+					products.sort((a, b) => b.sold - a.sold);
+					break;
+				case 'newest':
+					products.sort((a, b) => b.id - a.id);
+					break;
+			}
+
+			displayProducts(products);
+		}
+
+		function resetFilters() {
+			document.getElementById('cat-all').checked = true;
+			document.getElementById('priceRange').value = 500;
+			document.getElementById('priceValue').textContent = '500';
+			document.getElementById('inStock').checked = false;
+			document.getElementById('rating-4plus').checked = false;
+			document.getElementById('rating-3plus').checked = false;
+			document.getElementById('sortSelect').value = 'featured';
+			loadProducts();
+		}
+
+		function addToCart(productId) {
+			const allProducts = getAllProducts();
+			const product = allProducts.find(p => p.id === productId);
+			if (!product || product.stock === 0) return;
+
+			let cart = storageManager.getCart();
+			const existingItem = cart.find(item => item.id === productId);
+
+			if (existingItem) {
+				existingItem.quantity += 1;
+			} else {
+				cart.push({ ...product, quantity: 1 });
+			}
+
+			storageManager.setCart(cart);
+			updateCartBadge();
+			showToast(`${product.name} added to cart!`, 'success');
+		}
+
+		function toggleWishlist(productId) {
+			const allProducts = getAllProducts();
+			const product = allProducts.find(p => p.id === productId);
+			if (!product) return;
+
+			let wishlist = storageManager.getWishlist();
+			const index = wishlist.findIndex(item => item.id === productId);
+
+			if (index > -1) {
+				wishlist.splice(index, 1);
+				showToast('Removed from wishlist', 'info');
+			} else {
+				wishlist.push(product);
+				showToast('Added to wishlist!', 'success');
+			}
+
+			storageManager.setWishlist(wishlist);
+			updateWishlistBadge();
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Seller Onboarding - Emporium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <style>
+        .onboarding-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .onboarding-container h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 20px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .onboarding-btn {
+            grid-column: 1 / -1;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .onboarding-btn:hover {
+            background-color: #066c5e;
+            transform: translateY(-2px);
+        }
+
+        .step-hint {
+            font-size: 13px;
+            color: var(--text-color);
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header" style="background-color: var(--light-color);">
+        <a href="../../index.html"><img src="../../img/logo.png" class="logo" alt="logo"></a>
+        <div class="brand">
+            <h2>Emporium Seller Central</h2>
+        </div>
+    </header>
+
+    <div class="onboarding-container">
+        <h2>Complete Your Seller Profile</h2>
+        <p style="text-align: center; color: var(--text-color); margin-bottom: 40px;">Provide your business and payout
+            details to start selling on Emporium.</p>
+
+        <form id="onboardingForm">
+            <div class="section-title">
+                <i class="fas fa-store"></i> Brand Details
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="brandName">Brand/Shop Name *</label>
+                    <input type="text" id="brandName" required placeholder="e.g. Urban Threads">
+                </div>
+                <div class="form-group">
+                    <label for="brandType">Business Type *</label>
+                    <input type="text" id="brandType" required placeholder="e.g. Retail, Wholesale">
+                </div>
+                <div class="form-group full">
+                    <label for="brandDescription">Brand Description *</label>
+                    <textarea id="brandDescription" required
+                        placeholder="Tell us about your brand and products..."></textarea>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-university"></i> Bank Details
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="accHolder">Account Holder Name *</label>
+                    <input type="text" id="accHolder" required placeholder="As per bank records">
+                </div>
+                <div class="form-group">
+                    <label for="bankName">Bank Name *</label>
+                    <input type="text" id="bankName" required placeholder="e.g. HDFC Bank">
+                </div>
+                <div class="form-group">
+                    <label for="accNumber">Account Number *</label>
+                    <input type="text" id="accNumber" required placeholder="12-16 digit number">
+                </div>
+                <div class="form-group">
+                    <label for="ifsc">IFSC Code *</label>
+                    <input type="text" id="ifsc" required placeholder="e.g. HDFC0001234">
+                </div>
+            </div>
+
+            <button type="submit" class="onboarding-btn">Start Selling Now</button>
+        </form>
+        <p class="step-hint">By clicking submit, you agree to our Seller Terms of Service.</p>
+    </div>
+
+    <script src="../../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const user = storageManager.getUser();
+            if (!user) {
+                window.location.href = '../auth/login.html';
+                return;
+            }
+            if (user.role === 'seller') {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        document.getElementById('onboardingForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const user = storageManager.getUser();
+
+            // Collect details
+            const sellerData = {
+                brandName: document.getElementById('brandName').value,
+                brandType: document.getElementById('brandType').value,
+                brandDescription: document.getElementById('brandDescription').value,
+                bankDetails: {
+                    accHolder: document.getElementById('accHolder').value,
+                    bankName: document.getElementById('bankName').value,
+                    accNumber: document.getElementById('accNumber').value,
+                    ifsc: document.getElementById('ifsc').value
+                }
+            };
+
+            // Update user object
+            user.role = 'seller';
+            user.sellerDetails = sellerData;
+            user.firstName = sellerData.brandName; // Update name to brand name for display
+
+            storageManager.setUser(user);
+            showToast('Congratulations! You are now a seller.', 'success');
+
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 2000);
+        });
+    </script>
+</body>
+
+</html>

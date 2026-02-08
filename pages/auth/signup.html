@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>User Signup - Emporium</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="stylesheet" href="../../css/main.css">
+	<style>
+		.auth-container {
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: linear-gradient(135deg, #088178 0%, #066c5e 100%);
+			padding: 20px;
+		}
+
+		.auth-box {
+			background: white;
+			padding: 40px;
+			border-radius: 10px;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+			width: 100%;
+			max-width: 450px;
+		}
+
+		.auth-box h2 {
+			text-align: center;
+			margin-bottom: 10px;
+			color: var(--primary-color);
+		}
+
+		.auth-box .subtitle {
+			text-align: center;
+			color: var(--text-color);
+			font-size: 13px;
+			margin-bottom: 30px;
+		}
+
+		.form-group {
+			margin-bottom: 15px;
+		}
+
+		.form-group label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: 600;
+			font-size: 13px;
+			color: var(--dark-color);
+		}
+
+		.form-group input,
+		.form-group textarea {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid var(--border-color);
+			border-radius: 4px;
+			font-size: 13px;
+			font-family: 'Spartan', sans-serif;
+			transition: 0.3s ease;
+		}
+
+		.form-group input:focus,
+		.form-group textarea:focus {
+			border-color: var(--primary-color);
+			box-shadow: 0 0 0 3px rgba(8, 129, 120, 0.1);
+			outline: none;
+		}
+
+		.form-row {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 10px;
+		}
+
+		.form-group textarea {
+			resize: vertical;
+			min-height: 60px;
+		}
+
+		.image-upload {
+			margin: 15px 0;
+		}
+
+		.image-upload label {
+			display: block;
+			margin-bottom: 8px;
+			font-weight: 600;
+			color: var(--dark-color);
+		}
+
+		.image-upload-area {
+			border: 2px dashed var(--border-color);
+			border-radius: 4px;
+			padding: 20px;
+			text-align: center;
+			cursor: pointer;
+			transition: 0.3s ease;
+		}
+
+		.image-upload-area:hover {
+			border-color: var(--primary-color);
+			background-color: rgba(8, 129, 120, 0.05);
+		}
+
+		.image-upload input {
+			display: none;
+		}
+
+		.signup-btn {
+			width: 100%;
+			padding: 12px;
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			border-radius: 4px;
+			font-size: 16px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: 0.3s ease;
+			margin-top: 15px;
+		}
+
+		.signup-btn:hover {
+			background-color: #066c5e;
+		}
+
+		.login-link {
+			text-align: center;
+			color: var(--text-color);
+			font-size: 13px;
+			margin-top: 15px;
+		}
+
+		.login-link a {
+			color: var(--primary-color);
+			text-decoration: none;
+			font-weight: 700;
+		}
+
+		.login-link a:hover {
+			text-decoration: underline;
+		}
+
+		.checkbox-group {
+			margin: 15px 0;
+			font-size: 13px;
+		}
+
+		.checkbox-group input {
+			margin-right: 8px;
+		}
+
+		.checkbox-group label {
+			margin: 0;
+			display: inline;
+		}
+
+		.checkbox-group a {
+			color: var(--primary-color);
+			text-decoration: none;
+		}
+
+		.checkbox-group a:hover {
+			text-decoration: underline;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="auth-container">
+		<div class="auth-box">
+			<h2>Create Account</h2>
+			<p class="subtitle">Join Emporium to start shopping or selling</p>
+
+			<form id="signupForm">
+				<div class="form-row">
+					<div class="form-group">
+						<label for="firstName">First Name</label>
+						<input type="text" id="firstName" name="firstName" placeholder="John" required>
+					</div>
+					<div class="form-group">
+						<label for="lastName">Last Name</label>
+						<input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="email">Email Address</label>
+					<input type="email" id="email" name="email" placeholder="your@email.com" required>
+				</div>
+
+				<div class="form-group">
+					<label for="phone">Phone Number</label>
+					<input type="text" id="phone" name="phone" placeholder="+1 (555) 123-4567" required>
+				</div>
+
+				<div class="form-group">
+					<label for="password">Password</label>
+					<input type="password" id="password" name="password" placeholder="At least 6 characters" required>
+				</div>
+
+				<div class="form-group">
+					<label for="confirmPassword">Confirm Password</label>
+					<input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password"
+						required>
+				</div>
+
+				<div class="image-upload">
+					<label for="profileImage">Profile Image</label>
+					<div class="image-upload-area" onclick="document.getElementById('profileImage').click()">
+						<i class="fas fa-cloud-upload-alt"
+							style="font-size: 24px; color: var(--primary-color); margin-bottom: 10px; display: block;"></i>
+						<p style="margin: 0; font-size: 13px; color: var(--text-color);">Click to upload or drag and
+							drop</p>
+					</div>
+					<input type="file" id="profileImage" name="profileImage" accept="image/*">
+				</div>
+
+				<div class="checkbox-group">
+					<input type="checkbox" id="terms" name="terms" required>
+					<label for="terms">I agree to the <a href="#">Terms & Conditions</a></label>
+				</div>
+
+				<div class="checkbox-group">
+					<input type="checkbox" id="newsletter" name="newsletter">
+					<label for="newsletter">Subscribe to our newsletter</label>
+				</div>
+
+				<button type="submit" class="signup-btn">Create Account</button>
+			</form>
+
+			<div class="login-link">
+				Already have an account? <a href="login.html">Login here</a>
+			</div>
+		</div>
+	</div>
+
+	<script src="../../js/main.js"></script>
+	<script>
+		document.getElementById('signupForm').addEventListener('submit', function (e) {
+			e.preventDefault();
+
+			const firstName = document.getElementById('firstName').value;
+			const lastName = document.getElementById('lastName').value;
+			const email = document.getElementById('email').value;
+			const phone = document.getElementById('phone').value;
+			const password = document.getElementById('password').value;
+			const confirmPassword = document.getElementById('confirmPassword').value;
+			const terms = document.getElementById('terms').checked;
+
+			if (!firstName || !lastName) {
+				showToast('Please enter your full name', 'error');
+				return;
+			}
+
+			if (!validateEmail(email)) {
+				showToast('Please enter a valid email', 'error');
+				return;
+			}
+
+			if (!validatePhone(phone)) {
+				showToast('Please enter a valid phone number', 'error');
+				return;
+			}
+
+			if (!validatePassword(password)) {
+				showToast('Password must be at least 6 characters', 'error');
+				return;
+			}
+
+			if (password !== confirmPassword) {
+				showToast('Passwords do not match', 'error');
+				return;
+			}
+
+			if (!terms) {
+				showToast('You must accept the terms & conditions', 'error');
+				return;
+			}
+
+			// Mock registration
+			const user = {
+				id: Date.now(),
+				firstName: firstName,
+				lastName: lastName,
+				email: email,
+				phone: phone,
+				role: 'user',
+				avatar: 'https://via.placeholder.com/150',
+				verified: false
+			};
+
+			storageManager.setUser(user);
+			showToast('Account created successfully! Please verify your email.', 'success');
+
+			setTimeout(() => {
+				window.location.href = '../../index.html';
+			}, 2000);
+		});
+
+		// Image upload preview
+		document.getElementById('profileImage').addEventListener('change', function () {
+			if (this.files && this.files[0]) {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					console.log('Image selected:', e.target.result);
+					showToast('Profile image selected', 'success');
+				};
+				reader.readAsDataURL(this.files[0]);
+			}
+		});
+	</script>
+</body>
+
+</html>
