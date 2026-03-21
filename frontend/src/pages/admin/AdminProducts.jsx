@@ -31,9 +31,11 @@ const AdminProducts = () => {
         const response = await axios.delete(`/api/products/${id}`);
         if (response.data.success) {
           setProducts(products.filter(p => p._id !== id));
+          alert('Product successfully removed from the platform.');
         }
       } catch (err) {
-        alert('Failed to delete product');
+        console.error('Admin delete error:', err);
+        alert(err.response?.data?.message || 'Failed to delete product. Only admins can perform this action.');
       }
     }
   };

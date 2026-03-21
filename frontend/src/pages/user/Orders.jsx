@@ -128,9 +128,9 @@ const Orders = () => {
               </div>
 
               <div className="flex gap-md mt-lg" style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-                <Link to={`/ orders / ${order._id} `} className="btn btn-outline" style={{ flex: 1 }}>
-                  View Details
-                </Link>
+                <button className="btn btn-outline" style={{ flex: 1, cursor: 'default' }}>
+                  #{order._id.slice(-8)}
+                </button>
                 {order.orderStatus === 'Delivered' && (
                   <button className="btn btn-primary" style={{ flex: 1 }}>
                     Buy Again

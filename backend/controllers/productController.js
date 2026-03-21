@@ -215,6 +215,13 @@ exports.deleteProduct = async (req, res) => {
       });
     }
 
+    // Delete images from Cloudinary
+    for (const image of product.images) {
+      if (image.public_id) {
+        await cloudinary.uploader.destroy(image.public_id);
+      }
+    }
+
     await product.deleteOne();
 
     res.status(200).json({

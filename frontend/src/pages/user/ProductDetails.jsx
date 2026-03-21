@@ -1,17 +1,41 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useAuth } from '../../context/AuthContext';
 
 const ProductDetails = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
+    const { user, isAuthenticated } = useAuth();
     const { addToCart } = useCart();
     const { toggleWishlist, isInWishlist } = useWishlist();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
     const [selectedImage, setSelectedImage] = useState(0);
+
+    const handleChat = async () => {
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+
+        try {
+            const response = await axios.post('/api/chats', {
+                sellerId: product.seller._id,
+                productId: product._id
+            });
+
+            if (response.data.success) {
+                navigate('/chat');
+            }
+        } catch (error) {
+            console.error('Error starting chat:', error);
+            alert('Could not start chat. Please try again later.');
+        }
+    };
 
     useEffect(() => {
         fetchProduct();
@@ -197,7 +221,25 @@ const ProductDetails = () => {
                                     <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>Sold by</p>
                                     <h4 style={{ fontSize: '1rem', margin: 0 }}>{product.seller?.shopName || 'Emporium Shop'}</h4>
                                 </div>
-                                <Link to={`/shop/${product.seller?._id}`} className="text-primary font-bold" style={{ fontSize: '0.85rem', marginLeft: 'auto' }}>View Shop →</Link>
+                                <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'flex-end' }}>
+                                    <Link to={`/shop/${product.seller?._id}`} className="text-primary font-bold" style={{ fontSize: '0.85rem' }}>View Shop →</Link>
+                                    {user?._id !== product.seller?._id && (
+                                        <button
+                                            onClick={handleChat}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                color: 'var(--primary)',
+                                                fontWeight: 'bold',
+                                                fontSize: '0.85rem',
+                                                cursor: 'pointer',
+                                                padding: 0
+                                            }}
+                                        >
+                                            Chat with Seller 💬
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -167,7 +167,12 @@ exports.updateProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         roles: user.roles,
-        sellerStatus: user.sellerStatus
+        sellerStatus: user.sellerStatus,
+        shopName: user.shopName,
+        shopPhone: user.shopPhone,
+        shopAddress: user.shopAddress,
+        shopGST: user.shopGST,
+        shopDescription: user.shopDescription
       }
     });
   } catch (error) {

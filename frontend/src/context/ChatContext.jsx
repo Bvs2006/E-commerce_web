@@ -1,0 +1,92 @@
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { io } from 'socket.io-client';
+import { useAuth } from './AuthContext';
+
+const ChatContext = createContext();
+
+export const useChat = () => {
+    const context = useContext(ChatContext);
+    if (!context) {
+        throw new Error('useChat must be used within a ChatProvider');
+    }
+    return context;
+};
+
+export const ChatProvider = ({ children }) => {
+    const { user, token } = useAuth();
+    const [socket, setSocket] = useState(null);
+    const [chats, setChats] = useState([]);
+    const [activeChat, setActiveChat] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [notifications, setNotifications] = useState([]);
+
+    // Initialize socket connection
+    useEffect(() => {
+        if (user && token) {
+            const newSocket = io(window.location.origin, {
+                auth: { token }
+            });
+
+            newSocket.on('connect', () => {
+                console.log('Socket connected');
+                newSocket.emit('join', user._id);
+            });
+
+            newSocket.on('newMessage', (data) => {
+                const { chatId, message } = data;
+                if (activeChat && activeChat._id === chatId) {
+                    setMessages(prev => [...prev, message]);
+                } else {
+                    // Update chat list last message
+                    setChats(prev => prev.map(chat =>
+                        chat._id === chatId
+                            ? { ...chat, lastMessage: message.text, lastMessageTime: message.timestamp }
+                            : chat
+                    ));
+                    // Add notification
+                    setNotifications(prev => [...prev, { chatId, message }]);
+                }
+            });
+
+            setSocket(newSocket);
+
+            return () => newSocket.close();
+        }
+    }, [user, token, activeChat]);
+
+    const selectChat = (chat) => {
+        setActiveChat(chat);
+        setMessages(chat.messages || []);
+        if (socket) {
+            socket.emit('joinChat', chat._id);
+        }
+    };
+
+    const sendMessage = useCallback((chatId, text) => {
+        if (socket && user) {
+            socket.emit('sendMessage', {
+                chatId,
+                text,
+                senderId: user._id
+            });
+        }
+    }, [socket, user]);
+
+    return (
+        <ChatContext.Provider value={{
+            socket,
+            chats,
+            setChats,
+            activeChat,
+            setActiveChat,
+            messages,
+            setMessages,
+            selectChat,
+            sendMessage,
+            notifications,
+            setNotifications
+        }}>
+            {children}
+        </ChatContext.Provider>
+    );
+};

@@ -72,6 +72,9 @@ const Navbar = () => {
                     <Link to="/wishlist" className="nav-link">
                         Wishlist ({wishlist.length})
                     </Link>
+                    <Link to="/chat" className="nav-link" style={{ position: 'relative' }}>
+                        Messages
+                    </Link>
 
                     {isAuthenticated ? (
                         <div style={{ position: 'relative' }}>
@@ -96,6 +99,7 @@ const Navbar = () => {
                                     <Link to="/dashboard" className="dropdown-link" onClick={() => setShowProfileMenu(false)}>My Dashboard</Link>
                                     {isSeller && <Link to="/seller/dashboard" className="dropdown-link" onClick={() => setShowProfileMenu(false)}>Seller Hub</Link>}
                                     {isAdmin && <Link to="/admin/dashboard" className="dropdown-link" onClick={() => setShowProfileMenu(false)}>Admin Panel</Link>}
+                                    <Link to="/chat" className="dropdown-link" onClick={() => setShowProfileMenu(false)}>Messages</Link>
                                     <Link to="/wishlist" className="dropdown-link" onClick={() => setShowProfileMenu(false)}>Wishlist</Link>
                                     <Link to="/orders" className="dropdown-link" onClick={() => setShowProfileMenu(false)}>My Orders</Link>
                                     <hr style={{ margin: '0.5rem 0', border: '0', borderTop: '1px solid #eee' }} />

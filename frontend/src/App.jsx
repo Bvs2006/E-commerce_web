@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { ChatProvider } from './context/ChatContext';
 
 // Auth Pages
 import Login from './pages/auth/Login';
@@ -78,169 +79,171 @@ function App() {
       <AuthProvider>
         <WishlistProvider>
           <CartProvider>
-            <Navbar />
-            <main style={{ minHeight: '80vh' }}>
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<Home />} />
-                <Route path="/shop" element={<Shop />} />
-                <Route path="/products" element={<Shop />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/product/:id" element={<ProductDetails />} />
+            <ChatProvider>
+              <Navbar />
+              <main style={{ minHeight: '80vh' }}>
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/shop" element={<Shop />} />
+                  <Route path="/products" element={<Shop />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/product/:id" element={<ProductDetails />} />
 
-                {/* Protected User Routes */}
-                <Route
-                  path="/cart"
-                  element={
-                    <ProtectedRoute>
-                      <Cart />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/checkout"
-                  element={
-                    <ProtectedRoute>
-                      <Checkout />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/orders"
-                  element={
-                    <ProtectedRoute>
-                      <Orders />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/wishlist"
-                  element={
-                    <ProtectedRoute>
-                      <Wishlist />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <UserDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/become-seller"
-                  element={
-                    <ProtectedRoute>
-                      <BecomeSellerForm />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/chat"
-                  element={
-                    <ProtectedRoute>
-                      <ChatPage />
-                    </ProtectedRoute>
-                  }
-                />
+                  {/* Protected User Routes */}
+                  <Route
+                    path="/cart"
+                    element={
+                      <ProtectedRoute>
+                        <Cart />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/checkout"
+                    element={
+                      <ProtectedRoute>
+                        <Checkout />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/orders"
+                    element={
+                      <ProtectedRoute>
+                        <Orders />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/wishlist"
+                    element={
+                      <ProtectedRoute>
+                        <Wishlist />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <UserDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/become-seller"
+                    element={
+                      <ProtectedRoute>
+                        <BecomeSellerForm />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/chat"
+                    element={
+                      <ProtectedRoute>
+                        <ChatPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                {/* Seller Routes */}
-                <Route
-                  path="/seller/dashboard"
-                  element={
-                    <SellerRoute>
-                      <SellerDashboard />
-                    </SellerRoute>
-                  }
-                />
-                <Route
-                  path="/seller/products"
-                  element={
-                    <SellerRoute>
-                      <ProductsManagement />
-                    </SellerRoute>
-                  }
-                />
-                <Route
-                  path="/seller/orders"
-                  element={
-                    <SellerRoute>
-                      <SellerOrders />
-                    </SellerRoute>
-                  }
-                />
-                <Route
-                  path="/seller/coupons"
-                  element={
-                    <SellerRoute>
-                      <Coupons />
-                    </SellerRoute>
-                  }
-                />
-                <Route
-                  path="/seller/settings"
-                  element={
-                    <SellerRoute>
-                      <ShopSettings />
-                    </SellerRoute>
-                  }
-                />
+                  {/* Seller Routes */}
+                  <Route
+                    path="/seller/dashboard"
+                    element={
+                      <SellerRoute>
+                        <SellerDashboard />
+                      </SellerRoute>
+                    }
+                  />
+                  <Route
+                    path="/seller/products"
+                    element={
+                      <SellerRoute>
+                        <ProductsManagement />
+                      </SellerRoute>
+                    }
+                  />
+                  <Route
+                    path="/seller/orders"
+                    element={
+                      <SellerRoute>
+                        <SellerOrders />
+                      </SellerRoute>
+                    }
+                  />
+                  <Route
+                    path="/seller/coupons"
+                    element={
+                      <SellerRoute>
+                        <Coupons />
+                      </SellerRoute>
+                    }
+                  />
+                  <Route
+                    path="/seller/settings"
+                    element={
+                      <SellerRoute>
+                        <ShopSettings />
+                      </SellerRoute>
+                    }
+                  />
 
-                {/* Admin Routes */}
-                <Route
-                  path="/admin/dashboard"
-                  element={
-                    <AdminRoute>
-                      <AdminDashboard />
-                    </AdminRoute>
-                  }
-                />
-                <Route
-                  path="/admin/users"
-                  element={
-                    <AdminRoute>
-                      <UsersManagement />
-                    </AdminRoute>
-                  }
-                />
-                <Route
-                  path="/admin/sellers"
-                  element={
-                    <AdminRoute>
-                      <SellersApproval />
-                    </AdminRoute>
-                  }
-                />
-                <Route
-                  path="/admin/products"
-                  element={
-                    <AdminRoute>
-                      <AdminProducts />
-                    </AdminRoute>
-                  }
-                />
-                <Route
-                  path="/admin/orders"
-                  element={
-                    <AdminRoute>
-                      <AdminOrders />
-                    </AdminRoute>
-                  }
-                />
-                <Route
-                  path="/admin/logs"
-                  element={
-                    <AdminRoute>
-                      <AdminLogs />
-                    </AdminRoute>
-                  }
-                />
-              </Routes>
-            </main>
-            <Footer />
+                  {/* Admin Routes */}
+                  <Route
+                    path="/admin/dashboard"
+                    element={
+                      <AdminRoute>
+                        <AdminDashboard />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/users"
+                    element={
+                      <AdminRoute>
+                        <UsersManagement />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/sellers"
+                    element={
+                      <AdminRoute>
+                        <SellersApproval />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/products"
+                    element={
+                      <AdminRoute>
+                        <AdminProducts />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/orders"
+                    element={
+                      <AdminRoute>
+                        <AdminOrders />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/logs"
+                    element={
+                      <AdminRoute>
+                        <AdminLogs />
+                      </AdminRoute>
+                    }
+                  />
+                </Routes>
+              </main>
+              <Footer />
+            </ChatProvider>
           </CartProvider>
         </WishlistProvider>
       </AuthProvider>

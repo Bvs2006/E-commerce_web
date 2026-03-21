@@ -68,6 +68,11 @@ exports.authorize = (...roles) => {
 // Seller authorization - check if user is approved seller
 exports.authorizeSeller = async (req, res, next) => {
   try {
+    // Admins bypass seller checks
+    if (req.user.roles.includes('admin')) {
+      return next();
+    }
+
     if (!req.user.roles.includes('seller')) {
       return res.status(403).json({
         success: false,

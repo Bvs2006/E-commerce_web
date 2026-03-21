@@ -103,15 +103,27 @@ const ProductsManagement = () => {
     }
   };
 
+  const handleRemoveImage = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    setImages(newImages);
+
+    const newPreviews = [...imagePreviews];
+    newPreviews.splice(index, 1);
+    setImagePreviews(newPreviews);
+  };
+
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
         const response = await axios.delete(`/api/products/${id}`);
         if (response.data.success) {
           setProducts(products.filter(p => p._id !== id));
+          alert('Product deleted successfully');
         }
       } catch (error) {
-        alert('Failed to delete product');
+        console.error('Delete error:', error);
+        alert(error.response?.data?.message || 'Failed to delete product. Access denied or server error.');
       }
     }
   };
@@ -199,8 +211,31 @@ const ProductsManagement = () => {
               />
               <div className="flex gap-sm mt-sm">
                 {imagePreviews.map((url, i) => (
-                  <div key={i} style={{ width: '80px', height: '80px', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                  <div key={i} style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--border)' }}>
                     <img src={url} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(i)}
+                      style={{
+                        position: 'absolute',
+                        top: '2px',
+                        right: '2px',
+                        background: 'red',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '20px',
+                        height: '20px',
+                        fontSize: '12px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingBottom: '2px'
+                      }}
+                    >
+                      ×
+                    </button>
                   </div>
                 ))}
               </div>
