@@ -1,31 +1,33 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './Auth.css';
 
-const Login = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [resetUrl, setResetUrl] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const { login } = useAuth();
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setMessage('');
+    setResetUrl('');
     setLoading(true);
 
-    const result = await login(email, password);
-
-    if (result.success) {
-      navigate('/');
-    } else {
-      setError(result.message);
+    try {
+      const response = await axios.post('/api/auth/forgot-password', { email });
+      setMessage(response.data.message);
+      if (response.data.resetUrl) {
+        setResetUrl(response.data.resetUrl);
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Unable to request password reset');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -35,11 +37,17 @@ const Login = () => {
           <Link to="/" style={{ textDecoration: 'none', color: 'var(--primary)', fontSize: '1.5rem', fontWeight: 'bold', display: 'block', marginBottom: '1rem' }}>
             Emporium
           </Link>
-          <h1>User Login</h1>
-          <p>Sign in to access your account</p>
+          <h1>Forgot Password</h1>
+          <p>Enter your email to generate a password reset link</p>
         </div>
 
         {error && <div style={{ color: 'var(--danger)', background: '#fee2e2', padding: '0.75rem', borderRadius: '4px', marginBottom: '1.5rem', fontSize: '0.9rem', textAlign: 'center' }}>{error}</div>}
+        {message && <div style={{ color: '#166534', background: '#dcfce7', padding: '0.75rem', borderRadius: '4px', marginBottom: '1.5rem', fontSize: '0.9rem', textAlign: 'center' }}>{message}</div>}
+        {resetUrl && (
+          <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '0.75rem', borderRadius: '4px', marginBottom: '1.5rem', fontSize: '0.9rem', wordBreak: 'break-all' }}>
+            Development reset link: <a href={resetUrl}>{resetUrl}</a>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -54,34 +62,19 @@ const Login = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-
           <button
             type="submit"
             className="btn btn-primary"
             disabled={loading}
             style={{ width: '100%', marginTop: '1rem' }}
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Generating link...' : 'Send Reset Link'}
           </button>
         </form>
 
         <div className="auth-footer">
-          <p style={{ marginBottom: '0.5rem' }}>
-            <Link to="/forgot-password">Forgot your password?</Link>
-          </p>
           <p>
-            Don't have an account? <Link to="/signup">Register here</Link>
+            Remember your password? <Link to="/login">Login here</Link>
           </p>
         </div>
       </div>
@@ -89,4 +82,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;

@@ -1,12 +1,22 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 // Generate JWT token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE
+    expiresIn: process.env.JWT_EXPIRE || '7d'
   });
 };
+
+const getAuthResponseUser = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  roles: user.roles,
+  sellerStatus: user.sellerStatus,
+  shopName: user.shopName
+});
 
 // @desc    Register new user
 // @route   POST /api/auth/signup
@@ -39,13 +49,7 @@ exports.signup = async (req, res) => {
       success: true,
       message: 'User registered successfully',
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        roles: user.roles,
-        sellerStatus: user.sellerStatus
-      }
+      user: getAuthResponseUser(user)
     });
   } catch (error) {
     res.status(500).json({
@@ -95,14 +99,7 @@ exports.login = async (req, res) => {
       success: true,
       message: 'Login successful',
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        roles: user.roles,
-        sellerStatus: user.sellerStatus,
-        shopName: user.shopName
-      }
+      user: getAuthResponseUser(user)
     });
   } catch (error) {
     res.status(500).json({
@@ -174,6 +171,106 @@ exports.updateProfile = async (req, res) => {
         shopGST: user.shopGST,
         shopDescription: user.shopDescription
       }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// @desc    Request password reset
+// @route   POST /api/auth/forgot-password
+// @access  Public
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide your email address'
+      });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message: 'If an account exists for that email, a reset link has been generated'
+      });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    user.resetPasswordToken = resetPasswordToken;
+    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+    await user.save({ validateBeforeSave: false });
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
+
+    console.log(`Password reset link for ${user.email}: ${resetUrl}`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Password reset link generated',
+      resetUrl: process.env.NODE_ENV === 'production' ? undefined : resetUrl
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// @desc    Reset password
+// @route   POST /api/auth/reset-password/:token
+// @access  Public
+exports.resetPassword = async (req, res) => {
+  try {
+    const { password } = req.body;
+
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a new password'
+      });
+    }
+
+    const resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Reset token is invalid or has expired'
+      });
+    }
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    const token = generateToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Password reset successful',
+      token,
+      user: getAuthResponseUser(user)
     });
   } catch (error) {
     res.status(500).json({

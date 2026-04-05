@@ -6,6 +6,8 @@ import { ChatProvider } from './context/ChatContext';
 // Auth Pages
 import Login from './pages/auth/Login';
 import Signup from './pages/auth/Signup';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
 
 // User Pages
 import Home from './pages/user/Home';
@@ -89,6 +91,8 @@ function App() {
                   <Route path="/products" element={<Shop />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password/:token" element={<ResetPassword />} />
                   <Route path="/product/:id" element={<ProductDetails />} />
 
                   {/* Protected User Routes */}

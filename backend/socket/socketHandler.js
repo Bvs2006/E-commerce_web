@@ -27,13 +27,28 @@ const socketHandler = (io) => {
     // Send message
     socket.on('sendMessage', async (data) => {
       try {
-        const { chatId, text, senderId } = data;
+        const { chatId, text } = data;
+        const senderId = socket.userId || data.senderId;
+
+        if (!senderId) {
+          socket.emit('error', { message: 'Not authorized to send message' });
+          return;
+        }
 
         // Save message to database
         const chat = await Chat.findById(chatId);
         
         if (!chat) {
           socket.emit('error', { message: 'Chat not found' });
+          return;
+        }
+
+        const isParticipant = chat.participants.some(
+          participant => participant.toString() === senderId.toString()
+        );
+
+        if (!isParticipant) {
+          socket.emit('error', { message: 'Not authorized to send message in this chat' });
           return;
         }
 
@@ -65,7 +80,7 @@ const socketHandler = (io) => {
 
         // Notify other participant if online
         const otherParticipant = chat.participants.find(
-          p => p.toString() !== senderId
+          p => p.toString() !== senderId.toString()
         );
 
         if (otherParticipant && onlineUsers.has(otherParticipant.toString())) {

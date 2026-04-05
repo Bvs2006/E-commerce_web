@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
 
 const ChatPage = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const {
     chats,
     setChats,
@@ -17,6 +19,7 @@ const ChatPage = () => {
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef(null);
+  const initialChatIdRef = useRef(location.state?.chatId || null);
 
   useEffect(() => {
     fetchChats();
@@ -30,17 +33,37 @@ const ChatPage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const isCurrentUser = (id) => id?.toString() === user?._id?.toString();
+
   const fetchChats = async () => {
     try {
       setLoading(true);
       const response = await axios.get('/api/chats');
       if (response.data.success) {
         setChats(response.data.chats);
+        if (initialChatIdRef.current) {
+          const initialChat = response.data.chats.find(chat => chat._id === initialChatIdRef.current);
+          if (initialChat) {
+            await openChat(initialChat._id);
+            initialChatIdRef.current = null;
+          }
+        }
       }
     } catch (error) {
       console.error('Error fetching chats:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const openChat = async (chatId) => {
+    try {
+      const response = await axios.get(`/api/chats/${chatId}`);
+      if (response.data.success) {
+        selectChat(response.data.chat);
+      }
+    } catch (error) {
+      console.error('Error opening chat:', error);
     }
   };
 
@@ -72,13 +95,13 @@ const ChatPage = () => {
               <p style={{ padding: '1rem', textAlign: 'center' }}>Loading...</p>
             ) : chats.length > 0 ? (
               chats.map(chat => {
-                const otherParticipant = chat.participants.find(p => p._id !== user?._id);
+                const otherParticipant = chat.participants.find(p => !isCurrentUser(p._id));
                 const isActive = activeChat?._id === chat._id;
 
                 return (
                   <div
                     key={chat._id}
-                    onClick={() => selectChat(chat)}
+                    onClick={() => openChat(chat._id)}
                     style={{
                       padding: '1rem 1.5rem',
                       cursor: 'pointer',
@@ -126,8 +149,8 @@ const ChatPage = () => {
                 gap: '1rem'
               }}>
                 <div style={{ fontWeight: 'bold' }}>
-                  {activeChat.participants.find(p => p._id !== user?._id)?.shopName ||
-                    activeChat.participants.find(p => p._id !== user?._id)?.name}
+                  {activeChat.participants.find(p => !isCurrentUser(p._id))?.shopName ||
+                    activeChat.participants.find(p => !isCurrentUser(p._id))?.name}
                 </div>
                 {activeChat.productId && (
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: 'auto' }}>
@@ -139,7 +162,8 @@ const ChatPage = () => {
               {/* Messages Container */}
               <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {messages.map((msg, i) => {
-                  const isMine = msg.sender === user?._id || msg.sender?._id === user?._id;
+                  const senderId = msg.sender?._id || msg.sender;
+                  const isMine = senderId?.toString() === user?._id?.toString();
                   return (
                     <div
                       key={i}

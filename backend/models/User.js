@@ -21,6 +21,8 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'Password must be at least 6 characters'],
     select: false
   },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
   roles: {
     type: [String],
     enum: ['user', 'seller', 'admin'],

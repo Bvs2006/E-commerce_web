@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
 
@@ -19,22 +19,28 @@ export const ChatProvider = ({ children }) => {
     const [activeChat, setActiveChat] = useState(null);
     const [messages, setMessages] = useState([]);
     const [notifications, setNotifications] = useState([]);
+    const activeChatRef = useRef(null);
+
+    useEffect(() => {
+        activeChatRef.current = activeChat;
+    }, [activeChat]);
 
     // Initialize socket connection
     useEffect(() => {
         if (user && token) {
-            const newSocket = io(window.location.origin, {
+            const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+            const newSocket = io(socketUrl, {
                 auth: { token }
             });
 
             newSocket.on('connect', () => {
                 console.log('Socket connected');
-                newSocket.emit('join', user._id);
+                newSocket.emit('join', user._id || user.id);
             });
 
             newSocket.on('newMessage', (data) => {
                 const { chatId, message } = data;
-                if (activeChat && activeChat._id === chatId) {
+                if (activeChatRef.current && activeChatRef.current._id === chatId) {
                     setMessages(prev => [...prev, message]);
                 } else {
                     // Update chat list last message
@@ -52,7 +58,7 @@ export const ChatProvider = ({ children }) => {
 
             return () => newSocket.close();
         }
-    }, [user, token, activeChat]);
+    }, [user, token]);
 
     const selectChat = (chat) => {
         setActiveChat(chat);
@@ -67,7 +73,7 @@ export const ChatProvider = ({ children }) => {
             socket.emit('sendMessage', {
                 chatId,
                 text,
-                senderId: user._id
+                senderId: user._id || user.id
             });
         }
     }, [socket, user]);

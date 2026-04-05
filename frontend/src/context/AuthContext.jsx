@@ -16,6 +16,24 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
+  const normalizeUser = (userData) => {
+    if (!userData) {
+      return userData;
+    }
+
+    return {
+      ...userData,
+      _id: userData._id || userData.id
+    };
+  };
+
+  const setSession = (authToken, userData) => {
+    localStorage.setItem('token', authToken);
+    setToken(authToken);
+    setUser(normalizeUser(userData));
+    axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
+  };
+
   // Set axios default headers
   useEffect(() => {
     if (token) {
@@ -29,7 +47,7 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async () => {
     try {
       const response = await axios.get('/api/auth/me');
-      setUser(response.data.user);
+      setUser(normalizeUser(response.data.user));
     } catch (error) {
       console.error('Error fetching user:', error);
       logout();
@@ -42,11 +60,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post('/api/auth/login', { email, password });
       const { token, user } = response.data;
-      
-      localStorage.setItem('token', token);
-      setToken(token);
-      setUser(user);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setSession(token, user);
       
       return { success: true };
     } catch (error) {
@@ -61,11 +75,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post('/api/auth/signup', { name, email, password });
       const { token, user } = response.data;
-      
-      localStorage.setItem('token', token);
-      setToken(token);
-      setUser(user);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setSession(token, user);
       
       return { success: true };
     } catch (error) {
@@ -84,7 +94,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = (updatedUser) => {
-    setUser(updatedUser);
+    setUser(normalizeUser(updatedUser));
   };
 
   const value = {
@@ -93,6 +103,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     signup,
+    setSession,
     logout,
     updateUser,
     isAuthenticated: !!token,

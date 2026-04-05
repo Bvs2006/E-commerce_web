@@ -84,6 +84,9 @@ const SellerDashboard = () => {
               <Link to="/seller/settings" className="btn" style={{ justifyContent: 'flex-start', border: 'none', color: 'rgba(255,255,255,0.8)' }}>
                 Settings
               </Link>
+              <Link to="/chat" className="btn" style={{ justifyContent: 'flex-start', border: 'none', color: 'rgba(255,255,255,0.8)' }}>
+                Messages
+              </Link>
             </nav>
 
             <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
@@ -101,9 +104,14 @@ const SellerDashboard = () => {
               <h2 style={{ fontSize: '1.8rem' }}>Seller Dashboard</h2>
               <p style={{ color: 'var(--text-muted)' }}>Overview of your shop status.</p>
             </div>
-            <Link to="/seller/products" className="btn btn-primary" style={{ fontSize: '0.85rem' }}>
-              Manage Products
-            </Link>
+            <div className="flex gap-sm">
+              <Link to="/chat" className="btn" style={{ fontSize: '0.85rem' }}>
+                Messages
+              </Link>
+              <Link to="/seller/products" className="btn btn-primary" style={{ fontSize: '0.85rem' }}>
+                Manage Products
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-4 mb-lg">

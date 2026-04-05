@@ -29,7 +29,7 @@ const ProductDetails = () => {
             });
 
             if (response.data.success) {
-                navigate('/chat');
+                navigate('/chat', { state: { chatId: response.data.chat._id } });
             }
         } catch (error) {
             console.error('Error starting chat:', error);
